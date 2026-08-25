@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sorteio — compre seus números</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="hero">
+    <div class="ticket">
+      <p class="eyebrow">Bilhete oficial · válido para o sorteio</p>
+      <h1 id="raffle-title">Carregando…</h1>
+      <img id="prize-image" class="prize-image" style="display:none" alt="Foto do prêmio">
+      <p class="desc" id="raffle-desc"></p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="label">Valor por número</div>
+          <div class="value" id="raffle-price">—</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Data do sorteio</div>
+          <div class="value" id="raffle-date">a definir</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Total de números</div>
+          <div class="value" id="raffle-total">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat available"><div class="n" id="count-available">0</div><div class="l">Disponíveis</div></div>
+    <div class="stat"><div class="n" id="count-reserved">0</div><div class="l">Reservados</div></div>
+    <div class="stat sold"><div class="n" id="count-sold">0</div><div class="l">Vendidos</div></div>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <h2>Escolha seus números</h2>
+      <div class="pack-options" id="pack-options"></div>
+      <div class="numbers-grid" id="numbers-grid"></div>
+      <div class="legend">
+        <span><i class="dot available"></i> Disponível</span>
+        <span><i class="dot selected"></i> Selecionado</span>
+        <span><i class="dot reserved"></i> Reservado</span>
+        <span><i class="dot sold"></i> Vendido</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Seu pedido</h2>
+      <div class="cart-list" id="cart-list">
+        <span class="cart-empty">Nenhum número selecionado ainda</span>
+      </div>
+      <div class="total-row">
+        <span class="label">Total</span>
+        <span class="value" id="cart-total">R$ 0,00</span>
+      </div>
+
+      <label for="name">Nome completo</label>
+      <input id="name" placeholder="Seu nome">
+
+      <label for="phone">WhatsApp / Telefone</label>
+      <input id="phone" placeholder="(00) 00000-0000">
+
+      <label for="email">E-mail (opcional)</label>
+      <input id="email" placeholder="voce@email.com">
+
+      <label for="cpf">CPF (opcional)</label>
+      <input id="cpf" placeholder="000.000.000-00">
+
+      <button class="btn" id="buy-btn" disabled>Selecione um número</button>
+      <div id="form-msg"></div>
+    </div>
+  </div>
+
+  <footer>
+    <a href="consulta.html">Já comprou? Consulte seus números</a><br><br>
+    Pagamentos processados com segurança pelo Mercado Pago
+  </footer>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

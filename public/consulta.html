@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Consultar meus números</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="ticket">
+      <p class="eyebrow">Consulta de bilhetes</p>
+      <h1>Meus números</h1>
+      <p class="desc">Digite o telefone ou e-mail que você usou na compra para ver seus números e o status de cada pedido.</p>
+
+      <label for="contact">Telefone ou e-mail</label>
+      <input id="contact" placeholder="Ex: 11999999999 ou voce@email.com">
+      <button class="btn" id="search-btn" style="max-width:260px">Consultar</button>
+      <div id="search-msg"></div>
+    </div>
+  </div>
+
+  <div id="results"></div>
+
+  <footer><a href="index.html">← Voltar ao sorteio</a></footer>
+</div>
+<script src="js/consulta.js"></script>
+</body>
+</html>

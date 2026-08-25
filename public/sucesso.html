@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pedido confirmado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="ticket" style="text-align:center">
+      <p class="eyebrow">Status do pedido</p>
+      <h1 id="status-title">Verificando pagamento…</h1>
+      <p class="desc" id="status-desc" style="margin:0 auto 10px">Isso pode levar alguns segundos enquanto confirmamos com o Mercado Pago.</p>
+      <div id="numbers-result" style="margin-top:18px"></div>
+      <a class="btn" style="display:inline-block;width:auto;padding:12px 26px;text-decoration:none;margin-top:20px" href="/index.html">Voltar ao sorteio</a>
+    </div>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get('order');
+const titleEl = document.getElementById('status-title');
+const descEl = document.getElementById('status-desc');
+const numsEl = document.getElementById('numbers-result');
+
+async function check(attempt = 0) {
+  if (!orderId) {
+    titleEl.textContent = 'Pedido não encontrado';
+    return;
+  }
+  const res = await fetch('/api/orders/' + orderId);
+  if (!res.ok) {
+    titleEl.textContent = 'Pedido não encontrado';
+    return;
+  }
+  const order = await res.json();
+
+  if (order.status === 'approved') {
+    titleEl.textContent = 'Pagamento aprovado! 🎉';
+    descEl.textContent = 'Seus números estão confirmados. Boa sorte!';
+    numsEl.innerHTML = order.numbers.map(n => `<span class="cart-chip" style="margin:3px">${String(n).padStart(2,'0')}</span>`).join('');
+    return;
+  }
+  if (['rejected', 'cancelled', 'expired'].includes(order.status)) {
+    titleEl.textContent = 'Pagamento não confirmado';
+    descEl.textContent = 'O pagamento não foi concluído. Os números foram liberados novamente.';
+    return;
+  }
+  if (attempt < 10) {
+    setTimeout(() => check(attempt + 1), 3000);
+  } else {
+    titleEl.textContent = 'Ainda processando…';
+    descEl.textContent = 'Assim que o Mercado Pago confirmar, seus números ficam garantidos automaticamente.';
+  }
+}
+check();
+</script>
+</body>
+</html>
