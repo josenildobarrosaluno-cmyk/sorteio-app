@@ -11,39 +11,45 @@
 <body>
 
 <div class="container">
+  <header class="masthead" id="masthead" style="display:none">
+    <img id="org-logo" class="org-logo" style="display:none" alt="Logo">
+    <span id="org-name" class="org-name"></span>
+  </header>
+
   <div class="hero">
     <div class="ticket">
-      <p class="eyebrow">Bilhete oficial · válido para o sorteio</p>
-      <h1 id="raffle-title">Carregando…</h1>
-      <img id="prize-image" class="prize-image" style="display:none" alt="Foto do prêmio">
-      <p class="desc" id="raffle-desc"></p>
-      <div class="hero-meta">
-        <div class="meta-item">
-          <div class="label">Valor por número</div>
-          <div class="value" id="raffle-price">—</div>
+      <div class="ticket-grid">
+        <div class="ticket-text">
+          <h1 id="raffle-title">Carregando…</h1>
+          <p class="desc" id="raffle-desc"></p>
+          <div class="hero-meta">
+            <div class="meta-item">
+              <div class="label">Valor por número</div>
+              <div class="value" id="raffle-price">—</div>
+            </div>
+            <div class="meta-item">
+              <div class="label">Data do sorteio</div>
+              <div class="value" id="raffle-date">a definir</div>
+            </div>
+            <div class="meta-item">
+              <div class="label">Total de números</div>
+              <div class="value" id="raffle-total">—</div>
+            </div>
+          </div>
         </div>
-        <div class="meta-item">
-          <div class="label">Data do sorteio</div>
-          <div class="value" id="raffle-date">a definir</div>
-        </div>
-        <div class="meta-item">
-          <div class="label">Total de números</div>
-          <div class="value" id="raffle-total">—</div>
-        </div>
+        <img id="prize-image" class="prize-image" style="display:none" alt="Foto do prêmio">
       </div>
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat available"><div class="n" id="count-available">0</div><div class="l">Disponíveis</div></div>
-    <div class="stat"><div class="n" id="count-reserved">0</div><div class="l">Reservados</div></div>
-    <div class="stat sold"><div class="n" id="count-sold">0</div><div class="l">Vendidos</div></div>
-  </div>
-
   <div class="layout">
-    <div class="panel">
+    <div class="panel" id="grid-panel">
       <h2>Escolha seus números</h2>
       <div class="pack-options" id="pack-options"></div>
+      <div class="custom-qty">
+        <input type="number" id="custom-qty-input" min="1" placeholder="Quantidade personalizada">
+        <button type="button" class="btn secondary" id="custom-qty-btn">Selecionar</button>
+      </div>
       <div class="numbers-grid" id="numbers-grid"></div>
       <div class="legend">
         <span><i class="dot available"></i> Disponível</span>
@@ -53,11 +59,15 @@
       </div>
     </div>
 
-    <div class="panel">
-      <h2>Seu pedido</h2>
+    <div class="panel" id="cart-panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <h2 style="margin:0">Seu pedido</h2>
+        <button type="button" class="btn secondary" id="clear-btn" style="width:auto;margin:0;padding:6px 14px;font-size:12px">Limpar seleção</button>
+      </div>
       <div class="cart-list" id="cart-list">
         <span class="cart-empty">Nenhum número selecionado ainda</span>
       </div>
+      <div id="upsell-hint"></div>
       <div class="total-row">
         <span class="label">Total</span>
         <span class="value" id="cart-total">R$ 0,00</span>

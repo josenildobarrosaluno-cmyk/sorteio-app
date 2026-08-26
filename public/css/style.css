@@ -46,6 +46,29 @@ a { color: var(--gold-soft); }
   padding: 48px 0 28px;
 }
 
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 32px 0 4px;
+}
+
+.org-logo {
+  height: 68px;
+  width: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.org-name {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 3vw, 32px);
+  letter-spacing: 0.01em;
+  color: var(--cream);
+}
+
 .ticket {
   position: relative;
   background: linear-gradient(160deg, var(--felt-700), var(--felt-800));
@@ -95,15 +118,24 @@ a { color: var(--gold-soft); }
   margin: 0 0 22px;
 }
 
+.ticket-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 30px;
+  align-items: center;
+}
+
+@media (max-width: 700px) {
+  .ticket-grid { grid-template-columns: 1fr; }
+}
+
 .prize-image {
   display: block;
   width: 100%;
-  max-width: 420px;
+  height: 200px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  margin: 4px 0 18px;
   object-fit: cover;
-  max-height: 280px;
 }
 
 .hero-meta {
@@ -175,6 +207,12 @@ a { color: var(--gold-soft); }
 @media (max-width: 820px) {
   .layout { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); }
+  #cart-panel { order: -1; }
+}
+
+#cart-panel {
+  position: sticky;
+  top: 20px;
 }
 
 .panel {
@@ -451,20 +489,83 @@ th {
 }
 
 .pack-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 4px 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 14px;
+  margin: 4px 0 22px;
 }
-.pack-chip {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  background: rgba(227, 178, 60, 0.1);
-  border: 1px solid var(--gold);
-  color: var(--gold-soft);
-  padding: 8px 14px;
-  border-radius: 20px;
+.pack-card {
+  position: relative;
+  background: linear-gradient(160deg, var(--felt-700), var(--felt-800));
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 12px 16px;
+  text-align: center;
   cursor: pointer;
-  transition: background 0.12s ease;
+  transition: transform 0.12s ease, border-color 0.12s ease;
 }
-.pack-chip:hover { background: rgba(227, 178, 60, 0.22); }
+.pack-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+.pack-card .badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.pack-card .qty {
+  font-family: var(--font-display);
+  font-size: 34px;
+  line-height: 1;
+  color: var(--gold-soft);
+}
+.pack-card .label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(245, 239, 221, 0.5);
+  margin-top: 4px;
+}
+.pack-card .price {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--cream);
+  margin-top: 10px;
+}
+
+.upsell-hint {
+  font-size: 12px;
+  color: var(--gold-soft);
+  background: rgba(227, 178, 60, 0.08);
+  border: 1px solid rgba(227, 178, 60, 0.3);
+  border-radius: 8px;
+  padding: 9px 12px;
+  margin: 4px 0 14px;
+}
+
+.custom-qty {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 22px;
+}
+.custom-qty input {
+  margin: 0;
+  max-width: 200px;
+}
+.custom-qty .btn {
+  width: auto;
+  margin: 0;
+  padding: 10px 18px;
+  white-space: nowrap;
+}

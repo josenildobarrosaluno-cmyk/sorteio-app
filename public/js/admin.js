@@ -71,6 +71,15 @@ async function loadSummary() {
 
   renderTiers(data.raffle.pricing_tiers || []);
 
+  document.getElementById('cfg-org-name').value = data.raffle.org_name || '';
+  const logoPreviewEl = document.getElementById('logo-preview');
+  if (data.raffle.logo_url) {
+    logoPreviewEl.src = data.raffle.logo_url + '?t=' + Date.now();
+    logoPreviewEl.style.display = 'block';
+  } else {
+    logoPreviewEl.style.display = 'none';
+  }
+
   const previewEl = document.getElementById('prize-preview');
   if (data.raffle.image_url) {
     previewEl.src = data.raffle.image_url + '?t=' + Date.now();
@@ -131,7 +140,8 @@ document.getElementById('save-cfg').addEventListener('click', async () => {
     digits: Number(document.getElementById('cfg-digits').value),
     draw_date: document.getElementById('cfg-date').value || null,
     status: document.getElementById('cfg-status').value,
-    pricing_tiers: collectTiers()
+    pricing_tiers: collectTiers(),
+    org_name: document.getElementById('cfg-org-name').value
   };
   const res = await apiAdmin('/api/admin/raffle', { method: 'PUT', body: JSON.stringify(body) });
   const data = await res.json();
@@ -175,6 +185,34 @@ document.getElementById('upload-img-btn').addEventListener('click', async () => 
     }
   } catch (err) {
     msgEl.innerHTML = '<div class="msg error">Erro ao enviar imagem.</div>';
+  }
+});
+
+document.getElementById('upload-logo-btn').addEventListener('click', async () => {
+  const fileInput = document.getElementById('logo-file');
+  const msgEl = document.getElementById('logo-msg');
+  if (!fileInput.files || fileInput.files.length === 0) {
+    msgEl.innerHTML = '<div class="msg error">Escolha uma imagem primeiro.</div>';
+    return;
+  }
+  const formData = new FormData();
+  formData.append('image', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/api/admin/raffle/logo', {
+      method: 'POST',
+      headers: { 'x-admin-key': getKey() },
+      body: formData
+    });
+    const data = await res.json();
+    if (res.ok) {
+      msgEl.innerHTML = '<div class="msg ok">Logo atualizada.</div>';
+      loadSummary();
+    } else {
+      msgEl.innerHTML = `<div class="msg error">${data.error}</div>`;
+    }
+  } catch (err) {
+    msgEl.innerHTML = '<div class="msg error">Erro ao enviar logo.</div>';
   }
 });
 

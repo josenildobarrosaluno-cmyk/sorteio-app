@@ -56,9 +56,20 @@ async function loadRaffle() {
     imgEl.style.display = 'none';
   }
 
-  document.getElementById('count-available').textContent = data.counts.available || 0;
-  document.getElementById('count-reserved').textContent = data.counts.reserved || 0;
-  document.getElementById('count-sold').textContent = data.counts.sold || 0;
+  const mastheadEl = document.getElementById('masthead');
+  const logoEl = document.getElementById('org-logo');
+  const orgNameEl = document.getElementById('org-name');
+  const hasLogo = !!data.raffle.logo_url;
+  const hasOrgName = !!(data.raffle.org_name && data.raffle.org_name.trim());
+
+  if (hasLogo) {
+    logoEl.src = data.raffle.logo_url;
+    logoEl.style.display = 'block';
+  } else {
+    logoEl.style.display = 'none';
+  }
+  orgNameEl.textContent = hasOrgName ? data.raffle.org_name : '';
+  mastheadEl.style.display = (hasLogo || hasOrgName) ? 'flex' : 'none';
 
   renderGrid(data.numbers);
   renderPackOptions();
@@ -73,12 +84,43 @@ function renderPackOptions() {
     return;
   }
   const sorted = [...tiers].sort((a, b) => a.qty - b.qty);
-  packEl.innerHTML = sorted.map(t =>
-    `<button type="button" class="pack-chip" data-qty="${t.qty}">${t.qty} números por ${fmtMoney(t.price)}</button>`
-  ).join('');
-  packEl.querySelectorAll('.pack-chip').forEach(btn => {
-    btn.addEventListener('click', () => selectRandomPack(Number(btn.dataset.qty)));
+
+  // Destaca a faixa com o melhor preço por número (mais vantajosa) como "Mais popular"
+  let bestIdx = 0;
+  let bestUnitPrice = Infinity;
+  sorted.forEach((t, i) => {
+    const unitPrice = t.price / t.qty;
+    if (unitPrice < bestUnitPrice) { bestUnitPrice = unitPrice; bestIdx = i; }
   });
+
+  packEl.innerHTML = sorted.map((t, i) => `
+    <div class="pack-card" data-qty="${t.qty}">
+      ${i === bestIdx && sorted.length > 1 ? '<span class="badge">Mais popular</span>' : ''}
+      <div class="qty">${t.qty}</div>
+      <div class="label">números</div>
+      <div class="price">${fmtMoney(t.price)}</div>
+    </div>
+  `).join('');
+  packEl.querySelectorAll('.pack-card').forEach(card => {
+    card.addEventListener('click', () => selectRandomPack(Number(card.dataset.qty)));
+  });
+}
+
+function renderUpsellHint() {
+  const hintEl = document.getElementById('upsell-hint');
+  const tiers = raffleState?.raffle.pricing_tiers || [];
+  if (tiers.length === 0 || selected.size === 0) {
+    hintEl.innerHTML = '';
+    return;
+  }
+  const sorted = [...tiers].sort((a, b) => a.qty - b.qty);
+  const next = sorted.find(t => t.qty > selected.size);
+  if (!next) {
+    hintEl.innerHTML = '';
+    return;
+  }
+  const missing = next.qty - selected.size;
+  hintEl.innerHTML = `<div class="upsell-hint">Faltam ${missing} número(s) para o pacote de ${next.qty} por ${fmtMoney(next.price)}</div>`;
 }
 
 function selectRandomPack(qty) {
@@ -130,6 +172,7 @@ function renderCart() {
       .map(n => `<span class="cart-chip">${fmtNumber(n)}</span>`)
       .join('');
   }
+  renderUpsellHint();
   const total = computeAmount(selected.size, raffleState?.raffle || { price: 0 });
   cartTotalEl.textContent = fmtMoney(total);
 
@@ -142,6 +185,23 @@ function renderCart() {
 function showMsg(text, type) {
   formMsg.innerHTML = `<div class="msg ${type}">${text}</div>`;
 }
+
+document.getElementById('clear-btn').addEventListener('click', () => {
+  selected.clear();
+  renderGrid(raffleState.numbers);
+  renderCart();
+});
+
+document.getElementById('custom-qty-btn').addEventListener('click', () => {
+  const input = document.getElementById('custom-qty-input');
+  const qty = parseInt(input.value, 10);
+  if (!qty || qty < 1) {
+    showMsg('Digite uma quantidade válida.', 'error');
+    return;
+  }
+  selectRandomPack(qty);
+  input.value = '';
+});
 
 buyBtn.addEventListener('click', async () => {
   const name = document.getElementById('name').value.trim();

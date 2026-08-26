@@ -170,8 +170,8 @@ app.get('/api/admin/summary', requireAdmin, (req, res) => {
 });
 
 app.put('/api/admin/raffle', requireAdmin, (req, res) => {
-  const { title, description, price, draw_date, digits, total_numbers, status, pricing_tiers } = req.body;
-  const result = store.updateRaffle({ title, description, price, draw_date, digits, total_numbers, status, pricing_tiers });
+  const { title, description, price, draw_date, digits, total_numbers, status, pricing_tiers, org_name } = req.body;
+  const result = store.updateRaffle({ title, description, price, draw_date, digits, total_numbers, status, pricing_tiers, org_name });
   if (result.error) return res.status(409).json({ error: result.error });
   res.json({ ok: true, raffle: result.raffle });
 });
@@ -188,6 +188,16 @@ app.post('/api/admin/raffle/image', requireAdmin, (req, res) => {
     const imageUrl = '/uploads/' + req.file.filename;
     store.setRaffleImage(imageUrl);
     res.json({ ok: true, image_url: imageUrl });
+  });
+});
+
+app.post('/api/admin/raffle/logo', requireAdmin, (req, res) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message });
+    if (!req.file) return res.status(400).json({ error: 'Nenhuma imagem enviada' });
+    const imageUrl = '/uploads/' + req.file.filename;
+    store.setLogoImage(imageUrl);
+    res.json({ ok: true, logo_url: imageUrl });
   });
 });
 

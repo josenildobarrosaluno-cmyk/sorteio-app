@@ -39,7 +39,17 @@
   <div class="layout" style="grid-template-columns: 1fr 1fr;">
     <div class="panel">
       <h2>Configurações do sorteio</h2>
-      <div class="form-grid">
+
+      <label>Nome da atlética/organização (opcional)</label>
+      <input id="cfg-org-name" placeholder="Ex: Atlética Megatherium">
+
+      <label>Logo (opcional)</label>
+      <img id="logo-preview" class="prize-image" style="display:none;max-height:80px;max-width:200px">
+      <input type="file" id="logo-file" accept="image/*" style="padding:8px 0">
+      <button class="btn secondary" id="upload-logo-btn" style="margin-top:10px">Enviar logo</button>
+      <div id="logo-msg"></div>
+
+      <div class="form-grid" style="margin-top:22px">
         <div>
           <label>Título</label>
           <input id="cfg-title">

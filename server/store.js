@@ -16,6 +16,8 @@ function defaultData() {
       draw_date: null,
       status: 'open',
       image_url: null,
+      logo_url: null,
+      org_name: '',
       pricing_tiers: []
     },
     numbers: Array.from({ length: 100 }, (_, i) => ({
@@ -98,11 +100,13 @@ function updateRaffle(patch) {
     }
   }
 
-  for (const key of ['title', 'description', 'price', 'draw_date', 'digits', 'total_numbers', 'status']) {
+  for (const key of ['title', 'description', 'price', 'draw_date', 'digits', 'total_numbers', 'status', 'org_name']) {
     if (patch[key] !== undefined && patch[key] !== null && patch[key] !== '') {
       data.raffle[key] = patch[key];
     } else if (patch[key] === null && key === 'draw_date') {
       data.raffle[key] = null;
+    } else if (patch[key] === '' && key === 'org_name') {
+      data.raffle[key] = '';
     }
   }
   if (Array.isArray(patch.pricing_tiers)) {
@@ -268,6 +272,12 @@ function setRaffleImage(imageUrl) {
   save(data);
 }
 
+function setLogoImage(imageUrl) {
+  const data = load();
+  data.raffle.logo_url = imageUrl;
+  save(data);
+}
+
 function onlyDigits(str) {
   return (str || '').replace(/\D/g, '');
 }
@@ -294,5 +304,5 @@ module.exports = {
   getRaffle, getNumbers, getCounts, regenerateNumbers, updateRaffle,
   releaseExpiredReservations, createBuyer, reserveNumbers, setOrderPreference,
   getOrder, approveOrder, failOrder, getSummary, resetRaffle, drawWinner,
-  setRaffleImage, findOrdersByContact, computeAmount
+  setRaffleImage, setLogoImage, findOrdersByContact, computeAmount
 };
