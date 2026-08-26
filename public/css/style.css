@@ -207,12 +207,14 @@ a { color: var(--gold-soft); }
 @media (max-width: 820px) {
   .layout { grid-template-columns: 1fr; }
   .stats { grid-template-columns: repeat(3, 1fr); }
-  #cart-panel { order: -1; }
+  #cart-panel { order: -1; position: static; }
 }
 
-#cart-panel {
-  position: sticky;
-  top: 20px;
+@media (min-width: 821px) {
+  #cart-panel {
+    position: sticky;
+    top: 20px;
+  }
 }
 
 .panel {
