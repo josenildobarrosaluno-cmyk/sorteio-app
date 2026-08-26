@@ -1,6 +1,8 @@
 let raffleState = null;
 let digits = 2;
 const selected = new Set();
+const NUMBERS_BATCH = 300;
+let visibleCount = NUMBERS_BATCH;
 
 const gridEl = document.getElementById('numbers-grid');
 const cartListEl = document.getElementById('cart-list');
@@ -43,7 +45,6 @@ async function loadRaffle() {
   document.getElementById('raffle-title').textContent = data.raffle.title;
   document.getElementById('raffle-desc').textContent = data.raffle.description;
   document.getElementById('raffle-price').textContent = fmtMoney(data.raffle.price);
-  document.getElementById('raffle-total').textContent = data.raffle.total_numbers;
   document.getElementById('raffle-date').textContent = data.raffle.draw_date
     ? new Date(data.raffle.draw_date + 'T00:00:00').toLocaleDateString('pt-BR')
     : 'a definir';
@@ -145,7 +146,8 @@ function selectRandomPack(qty) {
 
 function renderGrid(numbers) {
   gridEl.innerHTML = '';
-  for (const n of numbers) {
+  const toShow = numbers.slice(0, visibleCount);
+  for (const n of toShow) {
     const chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'num-chip ' + n.status + (selected.has(n.number) ? ' selected' : '');
@@ -153,6 +155,15 @@ function renderGrid(numbers) {
     chip.disabled = n.status !== 'available';
     chip.addEventListener('click', () => toggleNumber(n.number));
     gridEl.appendChild(chip);
+  }
+
+  const moreBtn = document.getElementById('load-more-btn');
+  const remaining = numbers.length - visibleCount;
+  if (remaining > 0) {
+    moreBtn.style.display = 'block';
+    moreBtn.textContent = `Ver mais números (${remaining} restantes)`;
+  } else {
+    moreBtn.style.display = 'none';
   }
 }
 
@@ -201,6 +212,11 @@ document.getElementById('custom-qty-btn').addEventListener('click', () => {
   }
   selectRandomPack(qty);
   input.value = '';
+});
+
+document.getElementById('load-more-btn').addEventListener('click', () => {
+  visibleCount += NUMBERS_BATCH;
+  renderGrid(raffleState.numbers);
 });
 
 buyBtn.addEventListener('click', async () => {
